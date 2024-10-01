@@ -38,7 +38,7 @@ from rewardbench import (
     load_preference_dataset,
 )
 
-NUM_SHARDS = 10
+NUM_SHARDS = 50
 
 @dataclass
 class Args:
