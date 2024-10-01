@@ -38,8 +38,6 @@ from rewardbench import (
     load_preference_dataset,
 )
 
-NUM_SHARDS = 50
-
 @dataclass
 class Args:
     # core args
@@ -72,6 +70,7 @@ class Args:
     max_length: int = 512
     """The max length to use."""
     shard: int = -1
+    num_shards: int = 1
 
     # system args
     load_json: bool = False
@@ -201,14 +200,14 @@ def actual_main(args: Args):
             args.dataset, split=args.split, json=args.load_json, tokenizer=tokenizer, conv=conv
         )
     
-    if args.shard != -1:
+    if args.shard != -1 or args.num_shards != 1:
         # Compute shard size
         total_size = len(dataset)
-        shard_size = total_size // NUM_SHARDS
+        shard_size = total_size // args.num_shards
 
         # Determine start and end indices for the specific shard
         start_idx = args.shard * shard_size
-        if args.shard == NUM_SHARDS - 1:
+        if args.shard == args.num_shards - 1:
             # Last shard takes any leftover data
             end_idx = total_size
         else:
